@@ -34,6 +34,12 @@ class StudentController extends GetxController {
     students[index] = student;
   }
 
+  Student? getStudnetformkey(int key) {
+    var box = Hive.box<Student>('students');
+    Student? student = box.getAt(key);
+    return student;
+  }
+
   void deleteStudentByKey(dynamic key) {
     var box = Hive.box<Student>('students');
     box.delete(key);

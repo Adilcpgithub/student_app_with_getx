@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,8 +6,9 @@ import 'package:get/get.dart';
 import 'package:student_app_getx/controllers/checkSerch.dart';
 import 'package:student_app_getx/controllers/search_controller.dart';
 import 'package:student_app_getx/controllers/student_controller.dart';
+import 'package:student_app_getx/models/student.dart';
 import 'package:student_app_getx/pages/add_student.dart';
-import 'package:student_app_getx/pages/ss.dart';
+import 'package:student_app_getx/pages/views%20_studnet.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -29,9 +31,9 @@ class HomeScreen extends StatelessWidget {
               },
               icon: const Icon(Icons.search))
         ],
-        backgroundColor: Colors.tealAccent[400],
+        backgroundColor: Color.fromARGB(123, 15, 131, 102),
         title: const Center(
-          child: Text("Studsent Information"),
+          child: Text("Student Information"),
         ),
       ),
       body: Obx(() {
@@ -74,47 +76,57 @@ class HomeScreen extends StatelessWidget {
                             : studentController.students[index];
                         final studentKey =
                             studentController.getStudentKey(index);
-                        return ListTile(
-                          onTap: () {
-                            print(studentKey);
-                          },
-                          title: Text(
-                            student.name ?? '',
-                          ),
-                          subtitle: Text(
-                            student.gender ?? '',
-                          ),
-                          leading: CircleAvatar(
-                            backgroundImage: student.imagePath != null
-                                ? FileImage(
-                                    File(student.imagePath!),
-                                  ) as ImageProvider
-                                : AssetImage('assets/AddStudent.jpg'),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Colors.teal,
-                                ),
-                              ),
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: Color.fromARGB(64, 129, 252, 172),
+                            child: ListTile(
+                              onTap: () {
+                                print('object');
 
-                              //  delete button---------------------------------------
-                              IconButton(
-                                onPressed: () {
-                                  studentController
-                                      .deleteStudentByKey(studentKey);
-                                  // Get.off(HomeScreen());
-                                },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              )
-                            ],
+                                Get.to(StudetsDetails(
+                                  student: studentController.students[index],
+                                ));
+                                print(studentKey);
+                              },
+                              title: Text(
+                                student.name ?? '',
+                              ),
+                              subtitle: Text(
+                                student.gender ?? '',
+                              ),
+                              leading: CircleAvatar(
+                                backgroundImage: student.imagePath != null
+                                    ? FileImage(
+                                        File(student.imagePath!),
+                                      ) as ImageProvider
+                                    : AssetImage('assets/AddStudent.jpg'),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.teal,
+                                    ),
+                                  ),
+
+                                  //  delete button---------------------------------------
+                                  IconButton(
+                                    onPressed: () {
+                                      studentController
+                                          .deleteStudentByKey(studentKey);
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         );
                       }),

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       getPages: [GetPage(name: '/login', page: () => SplashScreen())],
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
     );

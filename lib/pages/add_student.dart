@@ -56,7 +56,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
               radius: 50,
               backgroundImage: _image != null
                   ? FileImage(_image!)
-                  : AssetImage('assets/student11.jpg') as ImageProvider,
+                  : AssetImage('assets/AddStudent.jpg') as ImageProvider,
             ),
             ElevatedButton(
               onPressed: _getImage,
