@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:student_app_getx/models/student.dart';
 
 class ProfilController extends GetxController {
-  var student = StudentModel(
-          name: '', age: '', studentClass: '', gender: '', imagePath: '')
-      .obs;
+  var student =
+      Student(name: '', age: '', studentClass: '', gender: '', imagePath: '')
+          .obs;
   void updataProfile(
       {required String name,
       required String age,
