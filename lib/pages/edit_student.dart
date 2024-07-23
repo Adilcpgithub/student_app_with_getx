@@ -7,14 +7,17 @@ import 'package:student_app_getx/controllers/student_controller.dart';
 import 'package:student_app_getx/models/student.dart';
 import 'package:student_app_getx/pages/home_screen.dart';
 
-class AddDataScreen extends StatefulWidget {
-  const AddDataScreen({Key? key}) : super(key: key);
+class EditScreen extends StatefulWidget {
+  const EditScreen({Key? key, required this.student, required this.studetKey})
+      : super(key: key);
+  final Student student;
+  final studetKey;
 
   @override
   _AddDataScreenState createState() => _AddDataScreenState();
 }
 
-class _AddDataScreenState extends State<AddDataScreen> {
+class _AddDataScreenState extends State<EditScreen> {
   final StudentController studentController = Get.put(StudentController());
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _userNameController = TextEditingController();
@@ -23,6 +26,23 @@ class _AddDataScreenState extends State<AddDataScreen> {
   final TextEditingController _userGenderController = TextEditingController();
 
   File? _image;
+
+  @override
+  void initState() {
+    setState(() {
+      _userNameController.text = widget.student.name ?? '';
+      _userClassController.text = widget.student.age ?? '';
+      _userAgeController.text = widget.student.age ?? '';
+      _userGenderController.text = widget.student.gender ?? '';
+
+      if (widget.student.imagePath != null) {
+        _image = File(widget.student.imagePath!);
+      } else {
+        _image = null;
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +183,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                       imagePath: _image?.path,
                     );
 
-                    studentController.addStudent(user);
+                    studentController.updateStudent(widget.studetKey, user);
 
                     _showSnackBar(
                         context, 'Data Saved Successfully', Colors.black);

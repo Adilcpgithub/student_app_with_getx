@@ -5,10 +5,10 @@ import 'package:student_app_getx/models/student.dart';
 class StudentController extends GetxController {
   var students = <Student>[].obs;
   var filteredStudents = <Student>[].obs;
+
   @override
   void onInit() {
     loadStudents();
-
     super.onInit();
   }
 
@@ -19,6 +19,10 @@ class StudentController extends GetxController {
 
   dynamic getStudentKey(int index) {
     var box = Hive.box<Student>('students');
+    if (index < 0 || index >= box.length) {
+      print("Index out of range: $index");
+      return null; // Handle out-of-range index
+    }
     return box.keyAt(index); // Return the key for the specific index
   }
 
@@ -31,10 +35,9 @@ class StudentController extends GetxController {
   void updateStudent(int index, Student student) {
     var box = Hive.box<Student>('students');
     box.putAt(index, student);
-    students[index] = student;
   }
 
-  Student? getStudnetformkey(int key) {
+  Student? getStudentFromKey(int key) {
     var box = Hive.box<Student>('students');
     Student? student = box.getAt(key);
     return student;
@@ -42,7 +45,15 @@ class StudentController extends GetxController {
 
   void deleteStudentByKey(dynamic key) {
     var box = Hive.box<Student>('students');
-    box.delete(key);
+    print('Attempting to delete student with key: $key');
+
+    if (box.containsKey(key)) {
+      box.delete(key);
+      print("Student with key: $key deleted successfully");
+    } else {
+      print("Key: $key not found in the box");
+    }
+
     loadStudents(); // Reload students to update the list
   }
 

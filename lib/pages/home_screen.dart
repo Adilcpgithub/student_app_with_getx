@@ -8,6 +8,7 @@ import 'package:student_app_getx/controllers/search_controller.dart';
 import 'package:student_app_getx/controllers/student_controller.dart';
 import 'package:student_app_getx/models/student.dart';
 import 'package:student_app_getx/pages/add_student.dart';
+import 'package:student_app_getx/pages/edit_student.dart';
 import 'package:student_app_getx/pages/views%20_studnet.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,6 +19,7 @@ class HomeScreen extends StatelessWidget {
   final CheckSearchController checkSearchController =
       Get.put(CheckSearchController());
   final TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,10 @@ class HomeScreen extends StatelessWidget {
         ],
         backgroundColor: Color.fromARGB(123, 15, 131, 102),
         title: const Center(
-          child: Text("Student Information"),
+          child: Text(
+            "   Student Information",
+            style: TextStyle(fontWeight: FontWeight.w900),
+          ),
         ),
       ),
       body: Obx(() {
@@ -62,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
             Expanded(
-              child: studentController.students.length == 0
+              child: studentController.students.isEmpty
                   ? Center(
                       child: Text('Student list is empty'),
                     )
@@ -76,16 +81,23 @@ class HomeScreen extends StatelessWidget {
                             : studentController.students[index];
                         final studentKey =
                             studentController.getStudentKey(index);
+
+                        // Handle null keys
+                        if (studentKey == null) {
+                          return SizedBox.shrink();
+                        }
+
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
                             color: Color.fromARGB(64, 129, 252, 172),
                             child: ListTile(
                               onTap: () {
-                                print('object');
-
+                                print('object'); //////////////////////////
+                                //
+                                //
                                 Get.to(StudetsDetails(
-                                  student: studentController.students[index],
+                                  student: student,
                                 ));
                                 print(studentKey);
                               },
@@ -106,18 +118,26 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.to(EditScreen(
+                                        student: student,
+                                        studetKey: index,
+                                      ));
+                                    },
                                     icon: const Icon(
                                       Icons.edit,
-                                      color: Colors.teal,
+                                      color: Color.fromARGB(255, 1, 99, 29),
                                     ),
                                   ),
-
-                                  //  delete button---------------------------------------
                                   IconButton(
                                     onPressed: () {
-                                      studentController
-                                          .deleteStudentByKey(studentKey);
+                                      // studentController
+                                      //     .deleteStudentByKey(studentKey);
+                                      onDeleteStudent(index);
+                                      if (checkSearchController
+                                          .isSearch.value) {
+                                        Get.off(HomeScreen());
+                                      }
                                     },
                                     icon: const Icon(
                                       Icons.delete,
@@ -134,13 +154,28 @@ class HomeScreen extends StatelessWidget {
           ],
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //
-          Get.to(AddDataScreen());
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: checkSearchController.isSearch.value
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                Get.to(AddDataScreen());
+              },
+              child: const Icon(Icons.add),
+            ),
     );
+  }
+
+  void onDeleteStudent(int index) {
+    final studentKey = studentController.getStudentKey(index);
+    if (studentKey != null) {
+      studentController.deleteStudentByKey(studentKey);
+    }
+
+    // Update the search results if applicable
+    if (checkSearchController.isSearch.value) {
+      checkSearchController.isSearch.value = false;
+      searchController.text = '';
+      studentController.searchStudents('');
+    }
   }
 }
